@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from ..models import Student
 from ..services.grade_service import get_transcript
+from ..services.warning_service import get_warning_students
 
 students_bp = Blueprint("students", __name__)
 
@@ -13,6 +14,11 @@ def index():
     if student_no:
         query = query.filter(Student.student_no.like(f"%{student_no}%"))
     return jsonify([student.to_dict() for student in query.all()])
+
+
+@students_bp.get("/warnings")
+def warnings():
+    return jsonify(get_warning_students())
 
 
 @students_bp.get("/<student_no>/transcript")
